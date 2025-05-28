@@ -36,10 +36,6 @@ app.get("/", (req, res) => {
     res.status(200).json({ message: "Welcome to Pinkify API 🎤" });
 });
 
-// Optionally for UptimeRobot
-app.get("/health", (req, res) => {
-    res.status(200).json({ message: "API is healthy" });
-});
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

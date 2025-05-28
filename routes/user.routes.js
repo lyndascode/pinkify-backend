@@ -67,6 +67,7 @@ router.get("/favorites/concerts", isAuthenticated, (req, res) => {
 });
 
 // GET /api/users/favorites/artists
+// GET /api/users/favorites/artists
 router.get("/favorites/artists", isAuthenticated, (req, res) => {
     User.findById(req.payload._id)
         .populate("favoriteArtists")
@@ -79,6 +80,7 @@ router.get("/favorites/artists", isAuthenticated, (req, res) => {
             res.status(500).json({ message: "Server error" });
         });
 });
+
 // ADD concert to favorites
 router.post("/favorites/concerts/:concertId", isAuthenticated, (req, res) => {
     const userId = req.payload._id;
