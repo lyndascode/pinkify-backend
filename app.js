@@ -21,6 +21,17 @@ app.use("/api", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
+
+const concertRoutes = require("./routes/concert.routes");
+app.use("/api/concerts", concertRoutes);
+
+app.use("/api/users", require("./routes/user.routes"));
+
+app.use("/api/artists", require("./routes/artists.routes"));
+
+const favoriteRoutes = require("./routes/favorites.routes");
+app.use("/api/favorites", favoriteRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 

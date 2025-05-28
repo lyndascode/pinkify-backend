@@ -18,6 +18,21 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    favourites: [{
+      type: Schema.Types.ObjectId,
+      ref: "Concert",
+    }],
+
+    favoriteArtists: [{
+      type: Schema.Types.ObjectId,
+      ref: "Artist",
+    }]
+
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
