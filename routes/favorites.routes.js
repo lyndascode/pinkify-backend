@@ -9,10 +9,10 @@ router.post("/concerts/:concertId", isAuthenticated, (req, res) => {
 
     User.findByIdAndUpdate(
         req.payload._id,
-        { $addToSet: { favourites: concertId } },
+        { $addToSet: { favorites: concertId } },
         { new: true }
     )
-        .populate("favourites")
+        .populate("favorites")
         .then((user) => res.status(200).json(user))
         .catch((err) => {
             console.log("Error adding concert to favorites", err);
@@ -26,10 +26,10 @@ router.delete("/concerts/:concertId", isAuthenticated, (req, res) => {
 
     User.findByIdAndUpdate(
         req.payload._id,
-        { $pull: { favourites: concertId } },
+        { $pull: { favorites: concertId } },
         { new: true }
     )
-        .populate("favourites")
+        .populate("favorites")
         .then((user) => res.status(200).json(user))
         .catch((err) => {
             console.log("Error removing concert from favorites", err);

@@ -55,6 +55,26 @@ router.post("/", (req, res, next) => {
 
 })
 
+
+//UPDATE ROUTE :
+
+router.put("/:id", isAuthenticated, (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    Concert.findByIdAndUpdate(id, updatedData, { new: true })
+        .then((updatedConcert) => {
+            if (!updatedConcert) {
+                return res.status(404).json({ message: "Concert not found." });
+            }
+            res.status(200).json(updatedConcert);
+        })
+        .catch((err) => {
+            console.log("Error updating concert", err);
+            res.status(500).json({ message: "Error updating concert" });
+        });
+});
+
 //DELETE ROUTE
 
 router.delete('/:id', isAuthenticated, (req, res, next) => {

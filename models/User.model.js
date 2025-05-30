@@ -23,7 +23,7 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    favourites: [{
+    favorites: [{
       type: Schema.Types.ObjectId,
       ref: "Concert",
     }],
@@ -31,8 +31,12 @@ const userSchema = new Schema(
     favoriteArtists: [{
       type: Schema.Types.ObjectId,
       ref: "Artist",
-    }]
+    }],
 
+    favoriteConcerts: [{
+      type: Schema.Types.ObjectId,
+      ref: "Concert",
+    }]
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

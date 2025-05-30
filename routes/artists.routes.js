@@ -1,6 +1,7 @@
 const express = require("express");
 const Artist = require("../models/Artist.model");
 const router = express.Router();
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 // GET all artists
 router.get("/", (req, res, next) => {
@@ -47,9 +48,26 @@ router.post("/", (req, res, next) => {
 });
 
 
+router.put("/:id", isAuthenticated, (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    Artist.findByIdAndUpdate(id, updatedData, { new: true })
+        .then((updatedArtist) => {
+            if (!updatedArtist) {
+                return res.status(404).json({ message: "Artist not found." });
+            }
+            res.status(200).json(updatedArtist);
+        })
+        .catch((err) => {
+            console.log("Error updating Artist", err);
+            res.status(500).json({ message: "Error updating Artist" });
+        });
+});
+
 //DELETE ROUTE
 
-router.delete('/events', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
     const { id } = req.body;
     Artist.findByIdAndDelete(id)
         .then((deletedArtist) => { res.status(200).json({ message: "Artist deleted", deletedArtist }) })

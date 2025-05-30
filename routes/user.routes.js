@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 // GET /api/users/me → get logged-in user's full info
 router.get("/me", isAuthenticated, (req, res) => {
     User.findById(req.payload._id)
-        .populate("favourites")
+        .populate("favorites")
         .populate("favoriteArtists")
         .then((foundUser) => {
             if (!foundUser) {
@@ -55,10 +55,10 @@ router.get("/", isAuthenticated, (req, res) => {
 // GET /api/users/favorites/concerts
 router.get("/favorites/concerts", isAuthenticated, (req, res) => {
     User.findById(req.payload._id)
-        .populate("favourites")
+        .populate("favorites")
         .then((user) => {
             if (!user) return res.status(404).json({ message: "User not found" });
-            res.json(user.favourites);
+            res.json(user.favorites);
         })
         .catch((err) => {
             console.error("Error getting favorite concerts", err);
@@ -88,14 +88,32 @@ router.post("/favorites/concerts/:concertId", isAuthenticated, (req, res) => {
 
     User.findByIdAndUpdate(
         userId,
-        { $addToSet: { favourites: concertId } }, // addToSet avoids duplicates
+        { $addToSet: { favorites: concertId } }, // addToSet avoids duplicates
         { new: true }
     )
-        .populate("favourites")
+        .populate("favorites")
         .then(updatedUser => res.status(200).json(updatedUser))
         .catch(err => {
             console.log("Error adding concert to favorites:", err);
             res.status(500).json({ message: "Failed to add concert to favorites" });
+        });
+});
+
+// ADD artist to favorites  if is authenticated !! thats why we can click on fav in homepage if no login
+router.post("/favorites/artists/:artistId", isAuthenticated, (req, res) => {
+    const userId = req.payload._id;
+    const artistId = req.params.artistId;
+
+    User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { favorites: artistId } }, // addToSet avoids duplicates
+        { new: true }
+    )
+        .populate("favorites")
+        .then(updatedUser => res.status(200).json(updatedUser))
+        .catch(err => {
+            console.log("Error adding artist to favorites:", err);
+            res.status(500).json({ message: "Failed to add artist to favorites" });
         });
 });
 
