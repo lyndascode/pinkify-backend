@@ -16,4 +16,16 @@ module.exports = (app) => {
       });
     }
   });
+
+  // Better error handling for JWT errors
+  app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+      return res.status(401).json({
+        message: 'Invalid or expired token',
+        code: err.code,
+        expiredAt: err.inner?.expiredAt
+      });
+    }
+    next(err);
+  });
 };

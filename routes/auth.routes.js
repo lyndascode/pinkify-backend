@@ -143,43 +143,14 @@ router.post("/login", (req, res, next) => {
 
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
-router.get("/verify", isAuthenticated, (req, res, next) => { //isAuthenticated middleware is like the bouncer checking if your ID is valid
+router.get('/verify', isAuthenticated, (req, res, next) => {
   // If JWT token is valid the payload gets decoded by the
-  // isAuthenticated middleware and is made available on `req.payload`,   They check if you're still in their database
+  // isAuthenticated middleware and made available on `req.payload`
+  console.log(`req.payload`, req.payload);
 
-  console.log(`req.payload`, req.payload);  //req.payload -  the basic ID info
-
-  User.findById(req.payload._id)
-
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      //  DEBUG 
-      console.log('User from DB:', {
-        _id: user._id,
-        isAdmin: user.isAdmin,
-        email: user.email
-      });
-
-      res.status(200).json({
-        ...req.payload,  // existing payload data
-        isAdmin: user.isAdmin  // add admin status
-      });
-    })
-    .catch(error => {
-      //   If something went wrong
-      next(error);
-    });
+  // Send back the object with user data
+  // previously set as the token payload
+  res.status(200).json(req.payload);
 });
 
-
-/*isAuthenticated already verified your token is valid
-
-We then check the database to ensure you still exist
-
-We add the current isAdmin status from the database
-
-This gives the client up-to-date information about privileges */
 module.exports = router;
